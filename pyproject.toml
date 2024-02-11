@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "async-app"
+version = "0.1.0"
+description = ""
+authors = ["Evgeny Malikov <evgeny.m3v@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiohttp = {extras = ["speedups"], version = "^3.9.3"}
+python-dotenv = "^1.0.1"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.25"}
+asyncpg = "^0.29.0"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+
+
+[tool.poetry.group.dev.dependencies]
+pylint = "^3.0.3"
+mypy = "^1.8.0"
+black = "^24.1.1"
+isort = "^5.13.2"
+types-passlib = "^1.7.7.20240106"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+# black
+[tool.black]
+line-length = 79
+extend-exclude = "migrations/"
+
+# isort
+[tool.isort]
+profile = "black"
+extend_skip_glob = "migrations"
+line_length = 79
+lines_after_imports = 2
+
+[tool.pylint]
+ignore = [".git", "__pycache__", "migrations", ".venv"]
+max-line-length = 79
+disable = ["C0114, C0115, C0116, W1514, W3101, W0613, W1401, W0621,R0903, R0801"]
