@@ -3,7 +3,7 @@ from typing import Any, AsyncIterator, Iterator, Sequence
 
 import aiohttp
 
-from db import Base, engine, past_to_db
+from app.db import Base, engine, past_to_db
 
 
 # from itertools import islice

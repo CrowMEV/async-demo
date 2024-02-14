@@ -12,6 +12,7 @@ python-dotenv = "^1.0.1"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.25"}
 asyncpg = "^0.29.0"
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+httpx = "^0.26.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -20,6 +21,10 @@ mypy = "^1.8.0"
 black = "^24.1.1"
 isort = "^5.13.2"
 types-passlib = "^1.7.7.20240106"
+pytest = "^8.0.0"
+pylint-pytest = "^1.1.7"
+pytest-aiohttp = "^1.0.5"
+aiosqlite = "^0.19.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -40,4 +45,13 @@ lines_after_imports = 2
 [tool.pylint]
 ignore = [".git", "__pycache__", "migrations", ".venv"]
 max-line-length = 79
+load-plugins = ["pylint_pytest"]
 disable = ["C0114, C0115, C0116, W1514, W3101, W0613, W1401, W0621,R0903, R0801"]
+
+# pytest
+[tool.pytest.ini_options]
+addopts = "-v"
+asyncio_mode = "auto"
+pythonpath=["app"]
+testpaths = ["tests"]
+

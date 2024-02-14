@@ -1,11 +1,12 @@
 import json
+from datetime import datetime
 
 from aiohttp import web
 from passlib.context import CryptContext
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from db_server import Base, User, async_session, engine
+from app.db_server import Base, User, async_session, engine
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -43,6 +44,7 @@ async def get_user(user_id: int, session: AsyncSession):
             text=json.dumps({"error": "User not found"}),
             content_type="application/json",
         )
+    return user
 
 
 class UserView(web.View):
@@ -57,7 +59,14 @@ class UserView(web.View):
 
     async def get(self):
         user = await get_user(self.user_id, self.session)
-        return web.json_response({"id": user.id, "name": user.name})
+        return web.json_response(
+            {
+                "id": user.id,
+                "name": user.name,
+                "password": user.password,
+                "creted_at": datetime.timestamp(user.created_at),
+            }
+        )
 
     async def post(self):
         json_data = await self.request.json()
@@ -98,11 +107,12 @@ app.cleanup_ctx.append(orm_context)
 app.middlewares.append(session_middleware)
 app.add_routes(
     [
-        web.post("/hello_world/", hello_world),
+        web.get("/hello_world/", hello_world),
         web.post("/users/", UserView),
-        web.get("/users/{user_id:\d+}", UserView),
-        web.patch("/users/{user_id:\d+}", UserView),
-        web.delete("/users/{user_id:\d+}", UserView),
+        web.get(r"/users/{user_id:\d+}", UserView),
+        web.patch(r"/users/{user_id:\d+}", UserView),
+        web.delete(r"/users/{user_id:\d+}", UserView),
     ]
 )
-web.run_app(app)
+if __name__ == "__main__":
+    web.run_app(app)

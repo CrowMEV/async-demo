@@ -1,10 +1,9 @@
 from __future__ import annotations
 
+import datetime
 import os
-from datetime import datetime
 
 from dotenv import load_dotenv
-from sqlalchemy import func
 from sqlalchemy.ext.asyncio import (
     AsyncAttrs,
     async_sessionmaker,
@@ -33,4 +32,6 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(index=True, unique=True)
     password: Mapped[str]
-    created_at: Mapped[datetime] = mapped_column(server_default=str(func.now))
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        default=datetime.datetime.now()
+    )
